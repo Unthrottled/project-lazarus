@@ -6,18 +6,16 @@ internal class IntSetLinkedListNonRecursion(
   maxElements: Int,
 ) : IntSetLinkedList(maxElements) {
 
-  private var currentIndex = 0
-
   override fun add(i: Int): Boolean {
-    if (currentIndex >= maxElements) return false
+    if (itemsInList >= maxElements) return false
     return when {
       head == null -> {
-        currentIndex++
+        itemsInList++
         head = Node(i)
         true
       }
       head?.value?.compareTo(i) ?: -2 == 1 -> {
-        currentIndex++
+        itemsInList++
         head = Node(i, head)
         true
       }
@@ -31,7 +29,7 @@ internal class IntSetLinkedListNonRecursion(
                 current.next?.value?.compareTo(i) ?: -2 == 1))
           ) {
             current.next = Node(i, current.next)
-            currentIndex++
+            itemsInList++
             return true
           } else if (current.value == i) {
             return false
@@ -49,8 +47,6 @@ internal class IntSetLinkedListNonRecursion(
 internal class IntSetLinkedListRecursion(
   maxElements: Int,
 ) : IntSetLinkedList(maxElements) {
-
-  private var itemsInList = 0
 
   override fun add(i: Int): Boolean {
     val (node, added) = addNode(head, i)
@@ -88,7 +84,7 @@ internal abstract class IntSetLinkedList(
 ) {
 
   protected var head: Node<Int>? = null
-  private var itemsInList = 0
+  protected var itemsInList = 0
 
   abstract fun add(i: Int): Boolean
 
