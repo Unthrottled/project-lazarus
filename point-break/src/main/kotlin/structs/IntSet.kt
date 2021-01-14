@@ -9,16 +9,19 @@ fun main() {
     val intSetNonRecursion = IntSetLinkedListNonRecursion(upperBounds)
     val intSetRecursion = IntSetLinkedListRecursion(upperBounds)
     val intSetBSTRecursion = IntSetBSTRecursion(upperBounds)
+    val intSetBSTInline = IntSetBSTInline(upperBounds)
     val random = Random(69 + it)
     repeat(upperBounds * 2) {
       val i = random.nextInt(upperBounds)
       intSetRecursion.add(i)
       intSetNonRecursion.add(i)
       intSetBSTRecursion.add(i)
+      intSetBSTInline.add(i)
     }
     printOutput(intSetNonRecursion)
     printOutput(intSetRecursion)
     printOutput(intSetBSTRecursion)
+    printOutput(intSetBSTInline)
     println()
   }
 }
@@ -31,7 +34,7 @@ private fun printOutput(intSetNonRecursion: IntSetLinkedList) {
   )
 }
 
-private fun printOutput(intSetNonRecursion: IntSetBSTRecursion) {
+private fun printOutput(intSetNonRecursion: IntSetBinarySearchTree) {
   println(
     intSetNonRecursion.elements.mapToObj {
       it.toString()

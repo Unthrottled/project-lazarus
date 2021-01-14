@@ -1,5 +1,6 @@
 package structs
 
+import java.util.LinkedList
 import java.util.stream.IntStream
 
 internal data class BinaryTreeNode<T>(
@@ -44,6 +45,46 @@ internal class IntSetBSTRecursion(maxElements: Int) : IntSetBinarySearchTree(max
 
 }
 
+internal class IntSetBSTInline(maxElements: Int) : IntSetBinarySearchTree(maxElements) {
+
+  override fun add(i: Int): Boolean {
+    if (itemsInList >= maxElements) return false
+
+    if (head == null) {
+      itemsInList++
+      head = BinaryTreeNode(i)
+      return true
+    }
+
+    val queue = LinkedList<BinaryTreeNode<Int>?>()
+    queue.push(head)
+    while (queue.isNotEmpty()) {
+      val current = queue.pop() ?: continue
+      if (i > current.value) {
+        if (current.right == null) {
+          itemsInList++
+          current.right = BinaryTreeNode(i)
+          return true
+        } else {
+          queue.push(current.right)
+        }
+      } else if (i < current.value) {
+        if (current.left == null) {
+          itemsInList++
+          current.left = BinaryTreeNode(i)
+          return true
+        } else {
+          queue.push(current.left)
+        }
+      } else {
+        return false
+      }
+    }
+
+    return false
+  }
+}
+
 internal abstract class IntSetBinarySearchTree(
   protected val maxElements: Int
 ) {
@@ -59,7 +100,7 @@ internal abstract class IntSetBinarySearchTree(
     get() = if (head == null) IntStream.empty()
     else {
       val bob = IntStream.builder()
-      traverseTree(head, bob).build()
+      traverseTreeInline(bob).build()
     }
 
   private fun traverseTree(
@@ -75,5 +116,29 @@ internal abstract class IntSetBinarySearchTree(
       newBob.add(head.value)
       traverseTree(head.right, bob)
     }
+  }
+
+  private fun traverseTreeInline(bob: IntStream.Builder): IntStream.Builder {
+    val queue = LinkedList<BinaryTreeNode<Int>?>()
+    queue.push(head)
+    while (queue.isNotEmpty()) {
+      val current = queue.pop() ?: continue
+      if (current.left == null && current.right == null) {
+        bob.add(current.value)
+        queue.peekFirst() ?: continue
+        bob.add(queue.pop()?.value ?: continue)
+      } else if (current.left == null) {
+        bob.add(current.value)
+        queue.push(current.right)
+      } else if (current.right == null) {
+        bob.add(current.value)
+        queue.push(current.left)
+      } else {
+        queue.push(current.right)
+        queue.push(current)
+        queue.push(current.left)
+      }
+    }
+    return bob
   }
 }
