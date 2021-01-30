@@ -2,6 +2,7 @@ package structs.binary.search.tree
 
 import data.Waifu
 import data.WaifuList
+import org.assertj.core.api.Assertions
 import java.util.LinkedList
 
 class BinarySearchTreeNode<T : Comparable<T>>(
@@ -11,7 +12,7 @@ class BinarySearchTreeNode<T : Comparable<T>>(
   var right: BinarySearchTreeNode<T>? = null,
 ) {
   override fun toString(): String {
-    return "BinarySearchTreeNode(data=$data, left=$left, right=$right)"
+    return "BinarySearchTreeNode(data=$data, left=${left?.data}, right=${right?.data})"
   }
 
   override fun equals(other: Any?): Boolean {
@@ -46,6 +47,34 @@ fun main() {
   val furthestLeft = findFurthestLeft(treeRoot)
   println("Height: $height, furthest left: $furthestLeft")
   findWaifusAtLevel(treeRoot)
+  println()
+  val midGirl = findMidGirl(treeRoot)
+  println("Mid Girl is ${midGirl?.data}")
+  Assertions.assertThat(midGirl?.data?.name).isEqualTo("Asuna")
+  println()
+  val secondBestGirl = findSecondBestGirl(treeRoot)
+  println("Second Best Girl is ${secondBestGirl?.data}")
+  Assertions.assertThat(secondBestGirl?.data?.name).isEqualTo("Ryuko")
+  val bestGirl = findBestGirl(treeRoot)
+  println("Best Girl is ${bestGirl?.data}")
+  Assertions.assertThat(bestGirl?.data?.name).isEqualTo("Zero Two")
+}
+
+fun findBestGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
+  if (treeNode == null) return null
+
+  return findBestGirl(treeNode.right) ?: treeNode.right ?: treeNode
+}
+
+fun findSecondBestGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
+  val bestGirl = findBestGirl(treeNode)
+  return bestGirl?.left ?: bestGirl?.parent
+}
+
+fun findMidGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
+  if (treeNode == null) return null
+
+  return findMidGirl(treeNode.left) ?: treeNode.left ?: treeNode
 }
 
 fun findWaifusAtLevel(treeRoot: BinarySearchTreeNode<Waifu>) {
@@ -64,7 +93,7 @@ fun findWaifusAtLevel(treeRoot: BinarySearchTreeNode<Waifu>) {
       print("level $level")
       println()
     } else {
-      print("${current.data} ")
+      print("$current ")
       visited.add(current)
       val leftNode = current.left
       if (leftNode != null && visited.contains(leftNode).not()) {

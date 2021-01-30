@@ -3,14 +3,16 @@ package data
 
 class Waifu(
   val name: String,
-  val comparator: (Waifu) -> Int =
-    { name.compareTo(it.name) },
+  private val comparator: ((Waifu) -> Int)? = null
 ) : Comparable<Waifu> {
+
   override fun compareTo(other: Waifu): Int =
-    comparator(other)
+    comparator?.invoke(other) ?:
+    other.comparator?.invoke(this)?.times(-1) ?:
+    name.compareTo(other.name)
 
   override fun toString(): String {
-    return "Waifu(name='$name')"
+    return name
   }
 
   override fun equals(other: Any?): Boolean {
