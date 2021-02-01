@@ -51,24 +51,62 @@ fun main() {
   val midGirl = findMidGirl(treeRoot)
   println("Mid Girl is ${midGirl?.data}")
   Assertions.assertThat(midGirl?.data?.name).isEqualTo("Asuna")
-  println()
-  val secondBestGirl = findSecondBestGirl(treeRoot)
-  println("Second Best Girl is ${secondBestGirl?.data}")
-  Assertions.assertThat(secondBestGirl?.data?.name).isEqualTo("Ryuko")
   val bestGirl = findBestGirl(treeRoot)
   println("Best Girl is ${bestGirl?.data}")
   Assertions.assertThat(bestGirl?.data?.name).isEqualTo("Zero Two")
+  println()
+
+  listWaifuInOrder(treeRoot)
+  println()
+
+  listWaifuInOrder(treeRoot, ascending = false)
+  println()
+  println()
+
+  val waifuToRemove = usableList.random()
+  println("Removing $waifuToRemove")
+  removeWaifu(treeRoot, waifuToRemove)
+}
+
+fun removeWaifu(
+  treeRoot: BinarySearchTreeNode<Waifu>?,
+  waifuToRemove: Waifu
+) {
+  if(treeRoot == null) return
+
+  when(treeRoot.data.compareTo(waifuToRemove)) {
+    0 -> {
+      val parent = treeRoot.parent
+      if(parent == null) {
+        val newRoot = findMidGirl(treeRoot.right) ?: treeRoot.left
+
+      } else {
+        val left = treeRoot.left
+        val right = treeRoot.right
+
+      }
+    }
+    1 -> removeWaifu(treeRoot.left, waifuToRemove)
+    else -> removeWaifu(treeRoot.right, waifuToRemove)
+  }
+
+}
+
+fun listWaifuInOrder(
+  treeRoot: BinarySearchTreeNode<Waifu>?,
+  ascending: Boolean = true,
+) {
+  if (treeRoot == null) return
+
+  listWaifuInOrder(if (ascending) treeRoot.right else treeRoot.left, ascending)
+  print("${treeRoot.data}, ")
+  listWaifuInOrder(if (ascending) treeRoot.left else treeRoot.right, ascending)
 }
 
 fun findBestGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
   if (treeNode == null) return null
 
   return findBestGirl(treeNode.right) ?: treeNode.right ?: treeNode
-}
-
-fun findSecondBestGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
-  val bestGirl = findBestGirl(treeNode)
-  return bestGirl?.left ?: bestGirl?.parent
 }
 
 fun findMidGirl(treeNode: BinarySearchTreeNode<Waifu>?): BinarySearchTreeNode<Waifu>? {
