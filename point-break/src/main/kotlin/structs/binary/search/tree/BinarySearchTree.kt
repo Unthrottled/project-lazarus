@@ -63,34 +63,34 @@ fun main() {
   println()
   println()
 
-  val waifuToRemove = usableList.random()
-  println("Removing $waifuToRemove")
-  removeWaifu(treeRoot, waifuToRemove)
+  reverseWaifuTree(treeRoot)
+
+  println("Mid girl in ${findMidGirl(treeRoot)?.data}")
+  println("Best girl in ${findBestGirl(treeRoot)?.data}")
+  listWaifuInOrder(treeRoot)
+  println()
+
+  println()
+
+  reverseWaifuTree(treeRoot)
+
+  println("Mid girl in ${findMidGirl(treeRoot)?.data}")
+  println("Best girl in ${findBestGirl(treeRoot)?.data}")
+  listWaifuInOrder(treeRoot)
+  println()
 }
 
-fun removeWaifu(
-  treeRoot: BinarySearchTreeNode<Waifu>?,
-  waifuToRemove: Waifu
-) {
+fun reverseWaifuTree(treeRoot: BinarySearchTreeNode<Waifu>?) {
   if(treeRoot == null) return
 
-  when(treeRoot.data.compareTo(waifuToRemove)) {
-    0 -> {
-      val parent = treeRoot.parent
-      if(parent == null) {
-        val newRoot = findMidGirl(treeRoot.right) ?: treeRoot.left
+  reverseWaifuTree(treeRoot.left)
+  reverseWaifuTree(treeRoot.right)
 
-      } else {
-        val left = treeRoot.left
-        val right = treeRoot.right
-
-      }
-    }
-    1 -> removeWaifu(treeRoot.left, waifuToRemove)
-    else -> removeWaifu(treeRoot.right, waifuToRemove)
-  }
-
+  val temp = treeRoot.left
+  treeRoot.left = treeRoot.right
+  treeRoot.right = temp
 }
+
 
 fun listWaifuInOrder(
   treeRoot: BinarySearchTreeNode<Waifu>?,
