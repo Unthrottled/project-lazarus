@@ -59,4 +59,4 @@ val WaifuList = listOf(
   Waifu("Yukino"),
   Waifu("Yuri"),
   Waifu("Zero Two") { 1 },
-)
+).sorted()
