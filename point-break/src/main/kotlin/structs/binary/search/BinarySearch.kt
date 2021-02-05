@@ -26,7 +26,7 @@ fun findWaifu(
 ): Int {
   var left = 0
   var right = sortedWaifu.size
-  while (left < right) {
+  while (left <= right) {
     val mid = (left + right) / 2
     val centerWaifu = sortedWaifu[mid]
     if (centerWaifu == waifu) {
@@ -34,7 +34,7 @@ fun findWaifu(
     } else if (centerWaifu < waifu) {
       left = mid + 1
     } else {
-      right = mid
+      right = mid - 1
     }
   }
   return -left
