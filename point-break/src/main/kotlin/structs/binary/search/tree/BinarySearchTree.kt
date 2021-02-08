@@ -184,3 +184,26 @@ tailrec fun insertWaifu(head: BinarySearchTreeNode<Waifu>?, waifu: Waifu) {
     }
   }
 }
+
+tailrec fun insertNode(head: WaifuNode?, waifu: WaifuNode) {
+  if (head == null) return
+
+  val comparison = head.data.compareTo(waifu.data)
+  if (comparison > 0) {
+    if (head.left == null) {
+      head.left = waifu.apply {
+        this.parent = head
+      }
+    } else {
+      insertNode(head.left, waifu)
+    }
+  } else if (comparison < 0) {
+    if (head.right == null) {
+      head.right = waifu.apply {
+        this.parent = head
+      }
+    } else {
+      insertNode(head.right, waifu)
+    }
+  }
+}

@@ -9,22 +9,54 @@ typealias WaifuNode = BinarySearchTreeNode<Waifu>
 fun main() {
   val usableList = WaifuList
     .shuffled()
+    .map { BinarySearchTreeNode(it) }
 
   val treeRoot = usableList
     .subList(1, usableList.size)
     .fold(
-      BinarySearchTreeNode(usableList.first())
+      usableList.first()
     ) { head, waifu ->
-      insertWaifu(head, waifu)
+      insertNode(head, waifu)
       head
     }
 
-  depthFirstSearchInline(treeRoot)
+  depthFirstTraversalInline(treeRoot)
   println()
-  depthFirstSearchRecursive(treeRoot)
+  depthFirstTraversalRecursive(treeRoot)
+  println()
+
+  val nodeWithSlot = usableList.first { it.left == null || it.right == null }
+  println("Attaching $nodeWithSlot to root node $treeRoot")
+  if (nodeWithSlot.right == null) {
+    nodeWithSlot.right = treeRoot
+  } else {
+    nodeWithSlot.left = treeRoot
+  }
+
+  val cycle = detectCycle(treeRoot)
+  println("Found Cycle on node $cycle")
 }
 
-fun depthFirstSearchRecursive(
+fun detectCycle(
+  treeRoot: BinarySearchTreeNode<Waifu>?,
+  visited: MutableSet<WaifuNode> = mutableSetOf()
+): WaifuNode? {
+  if (treeRoot == null) return null
+
+  visited.add(treeRoot)
+
+  val right = treeRoot.right
+  val left = treeRoot.left
+  if(right != null && visited.contains(right)) {
+    return treeRoot
+  } else if(left != null && visited.contains(left)) {
+    return treeRoot
+  }
+
+  return detectCycle(right, visited) ?: detectCycle(left, visited)
+}
+
+fun depthFirstTraversalRecursive(
   treeRoot: BinarySearchTreeNode<Waifu>?,
   visited: MutableSet<WaifuNode> = mutableSetOf()
 ) {
@@ -32,19 +64,19 @@ fun depthFirstSearchRecursive(
 
   val leftNode = treeRoot.left
   if (leftNode != null && visited.contains(leftNode).not()) {
-    depthFirstSearchRecursive(leftNode, visited)
+    depthFirstTraversalRecursive(leftNode, visited)
   }
 
   val rightNode = treeRoot.right
   if (rightNode != null && visited.contains(rightNode).not()) {
-    depthFirstSearchRecursive(rightNode, visited)
+    depthFirstTraversalRecursive(rightNode, visited)
   }
 
   println(treeRoot)
   visited.add(treeRoot)
 }
 
-fun depthFirstSearchInline(treeRoot: WaifuNode) {
+fun depthFirstTraversalInline(treeRoot: WaifuNode) {
   val stack = LinkedList<WaifuNode>()
   stack.push(treeRoot)
   val visited = mutableSetOf<WaifuNode>()
